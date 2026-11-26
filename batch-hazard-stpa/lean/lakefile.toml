@@ -1,0 +1,14 @@
+name = "batch-hazard"
+defaultTargets = ["BatchHazard", "hazards"]
+
+[[lean_lib]]
+name = "BatchHazard"
+
+[[lean_exe]]
+name = "hazards"
+root = "Main"
+
+[[require]]
+name = "lean-atlas"
+git = "https://github.com/kokeshiM0chi/lean-atlas"
+rev = "main"
