@@ -6,6 +6,12 @@ topics: ["lean", "lean4", "stpa", "sre", "formalmethods"]
 published: true
 ---
 
+## はじめに
+
+Google の『Site Reliability Engineering』第2版に、「Safety Engineering for SRE with STPA and CAST」という章が加わりました。STAMP/STPA はシステム安全工学から生まれた考え方と分析手法で、Google では2021年に社内研修が始まり、2025年の SREcon では Google Maps への適用事例も紹介されています（[STPA: Teaching a New Way to Prevent Outages at Google](https://sre.google/stpa/teaching/)）。こうした流れと、STPA を SRE の実務にどう使うかは、[STAMP/STPA を SRE の視点で解説した記事](https://zenn.dev/maruloop/articles/7ff108e29741b5)で詳しく紹介されています。
+
+この記事では、その STPA の考え方を、定理証明支援系の Lean で形式化します。特に、STPA の中心にある「部品は正常に動いているのに、組み合わせると事故が起きる」というハザードの捉え方を、Lean の定理として書いてみます。
+
 ## この記事で伝えたいこと
 
 Lean では、アプリの仕様と、満たすべき安全制約をコードとして書けます。
@@ -253,3 +259,8 @@ lake build DetectCounterexample      # 反例を確かめる：成功する
 - ビルドエラーの一覧が、ハザード候補の一覧になる。エラーが示す状況から反例を作って確かめれば、本物のハザードと確定する
 
 元記事の STPA 分析（Loss、Hazard、UCA、Loss Scenario）との詳しい対応、対策版の証明、Lean Atlas による証明状況の可視化、CI への組み込みは、[詳しい版の記事](https://github.com/kokeshiM0chi/lean-experiments/blob/main/articles/stpa-lean-renewal-notice.md)と[ソースコード解説](https://github.com/kokeshiM0chi/lean-experiments/tree/main/renewal-notice/docs)に書いています。
+
+## 参考文献
+
+- maru, 「[Googleが実践するSTAMP/STPAとは何か？ 私たちのSREにも使えるのか](https://zenn.dev/maruloop/articles/7ff108e29741b5)」, Zenn, 2026年11月23日. 本記事の題材（退会案内バッチ）と STPA の分析は、この記事によるものです。
+- Google SRE, 「[STPA (System Theoretic Process Analysis) -- Teaching a new way to prevent outages at Google](https://sre.google/stpa/teaching/)」.
