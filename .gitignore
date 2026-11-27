@@ -7,5 +7,5 @@ node_modules/
 # Go のバイナリ
 renewal-notice/go/server
 .DS_Store
-# VS Code などで書き出した記事のプレビュー
-articles/*.html
+# VS Code などで書き出した Markdown のプレビュー（リポジトリには入れない）
+*.html

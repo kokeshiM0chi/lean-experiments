@@ -61,10 +61,10 @@ flowchart TB
 
 | 順 | ファイル | 書くもの | 書き方 |
 |---|---|---|---|
-| ① | `Model.lean` | 仕様 | 状態を型に、各バッチを「状態を受け取って新しい状態を返す関数」にする。スケジューラーは順序を保証しないので、実行順は任意の動作の並び（`List Action`）として扱う |
-| ② | `Safety.lean` | 安全制約 | STPA の Hazard を否定したものを、状態についての条件として書く |
-| ③ | `Spec.lean` | 単体仕様 | 各バッチが単体で正しいことを、定理として証明する |
-| ④ | `Detect/*.lean` | 組み合わせの安全制約 | 「どの制御動作を実行しても安全制約が保たれる」を定理として書き、証明を試みる |
+| ① | [`Model.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/RenewalNotice/Model.lean) | 仕様 | 状態を型に、各バッチを「状態を受け取って新しい状態を返す関数」にする。スケジューラーは順序を保証しないので、実行順は任意の動作の並び（`List Action`）として扱う |
+| ② | [`Safety.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/RenewalNotice/Safety.lean) | 安全制約 | STPA の Hazard を否定したものを、状態についての条件として書く |
+| ③ | [`Spec.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/RenewalNotice/Spec.lean) | 単体仕様 | 各バッチが単体で正しいことを、定理として証明する |
+| ④ | [`Detect/WithoutConstraint.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/Detect/WithoutConstraint.lean)、[`Detect/WithConstraint.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/Detect/WithConstraint.lean) | 組み合わせの安全制約 | 「どの制御動作を実行しても安全制約が保たれる」を定理として書き、証明を試みる |
 
 ## ① 仕様を書く
 
@@ -205,6 +205,31 @@ lake build DetectCounterexample
 ```
 
 ビルドが通れば、反例は本物です。ハザード候補が、本物のハザード（バグ）として確定しました。
+
+## ソースコード
+
+この記事のコードは、すべて GitHub で公開しています。
+
+| ファイル | 内容 |
+|---|---|
+| [`lakefile.toml`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/lakefile.toml) | ビルド設定。`DetectWithoutConstraint` などのビルド対象もここで定義している |
+| [`RenewalNotice/Model.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/RenewalNotice/Model.lean) | ① 仕様：状態、バッチ A〜D、スケジューラー |
+| [`RenewalNotice/Safety.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/RenewalNotice/Safety.lean) | ② 安全制約 |
+| [`RenewalNotice/Spec.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/RenewalNotice/Spec.lean) | ③ 各バッチの単体仕様 |
+| [`Detect/WithoutConstraint.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/Detect/WithoutConstraint.lean) | ④-1 単体仕様だけ（ビルド成功） |
+| [`Detect/WithConstraint.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/Detect/WithConstraint.lean) | ④-2 組み合わせの安全制約（ビルド失敗） |
+| [`Detect/Counterexample.lean`](https://github.com/kokeshiM0chi/lean-experiments/blob/main/renewal-notice/lean/Detect/Counterexample.lean) | ハザード候補から反例を確かめる |
+| [`go/`](https://github.com/kokeshiM0chi/lean-experiments/tree/main/renewal-notice/go) | アプリ本体（Go） |
+
+手元で試すには、[elan](https://github.com/leanprover/elan)（Lean のインストーラー）を入れてから、次を実行します。
+
+```sh
+git clone https://github.com/kokeshiM0chi/lean-experiments
+cd lean-experiments/renewal-notice/lean
+lake build DetectWithoutConstraint   # 安全制約なし：成功する
+lake build DetectWithConstraint      # 安全制約あり：失敗し、ハザード候補が出る
+lake build DetectCounterexample      # 反例を確かめる：成功する
+```
 
 ## まとめ
 
