@@ -1,11 +1,11 @@
-name = "batch-hazard"
-defaultTargets = ["BatchHazard", "hazards"]
+name = "renewal-notice"
+defaultTargets = ["RenewalNotice", "explore"]
 
 [[lean_lib]]
-name = "BatchHazard"
+name = "RenewalNotice"
 
 [[lean_exe]]
-name = "hazards"
+name = "explore"
 root = "Main"
 
 [[require]]

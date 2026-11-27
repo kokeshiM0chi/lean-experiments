@@ -12,7 +12,7 @@ STPA の制御構造をそのままモデル化する。
 
 Go 実装 `go/batch/system.go` と1対1に対応させてある。
 -/
-namespace BatchHazard
+namespace RenewalNotice
 
 abbrev User := Nat
 
@@ -154,4 +154,4 @@ def init : State :=
     tC    := { asOf := 0, rows := [0] }
     sent  := [] }
 
-end BatchHazard
+end RenewalNotice

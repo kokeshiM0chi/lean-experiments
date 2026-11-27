@@ -72,7 +72,7 @@ func TestScenarios(t *testing.T) {
 
 // ---- Lean が見つけた反例を実装で再生する（モデルと実装の適合性チェック） ----
 //
-// lean/ で `lake exe hazards > out/counterexamples.json` を実行すると生成される。
+// lean/ で `lake exe explore > out/counterexamples.json` を実行すると生成される。
 // Lean が「このトレースで設計 d はハザード h を起こす」と言ったものが、
 // Go 実装でも本当に起きることを確認する。
 
@@ -85,7 +85,7 @@ type leanCounterexample struct {
 func TestLeanCounterexamplesReproduce(t *testing.T) {
 	data, err := os.ReadFile("../../lean/out/counterexamples.json")
 	if err != nil {
-		t.Skip("Leanの出力がありません（lean/ で lake exe hazards > out/counterexamples.json を実行してください）")
+		t.Skip("Leanの出力がありません（lean/ で lake exe explore > out/counterexamples.json を実行してください）")
 	}
 	var ces []leanCounterexample
 	if err := json.Unmarshal(data, &ces); err != nil {

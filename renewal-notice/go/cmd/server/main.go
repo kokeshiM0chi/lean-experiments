@@ -15,7 +15,7 @@ import (
 	"strconv"
 	"sync"
 
-	"batchnotify/batch"
+	"renewalnotice/batch"
 )
 
 type server struct {

@@ -1,4 +1,4 @@
-import BatchHazard.Safety
+import RenewalNotice.Safety
 /-!
 # 有界モデル検査: 「証明できない」を反例の探索に置き換える
 
@@ -6,7 +6,7 @@ Lean では、証明に失敗したことを証明の中から検出できない
 `∀ t, sc (run d init t) = true` を証明しようとする代わりに、長さ n 以下の全トレースを
 列挙して反例を探す。見つかった反例トレースは、STPA の Loss Scenario にあたる。
 -/
-namespace BatchHazard
+namespace RenewalNotice
 
 /-- スケジューラーと外乱が起こしうる動作。 -/
 def alphabet : List Action :=
@@ -36,4 +36,4 @@ def firstUCA (d : Design) (h : Hazard) : State → List Action → Option (State
     let s' := step d s a
     if h.sc s && !h.sc s' then some (s, a) else firstUCA d h s' t
 
-end BatchHazard
+end RenewalNotice

@@ -2,8 +2,8 @@
 .lake/
 node_modules/
 .next/
-# 生成物（lake exe hazards で再生成する）
+# 生成物（lake exe explore で再生成する）
 **/lean/out/*.json
 # Go のバイナリ
-batch-hazard-stpa/go/server
+renewal-notice/go/server
 .DS_Store

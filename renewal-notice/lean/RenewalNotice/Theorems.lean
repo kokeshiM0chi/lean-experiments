@@ -1,4 +1,4 @@
-import BatchHazard.ModelCheck
+import RenewalNotice.ModelCheck
 import LeanAtlas
 /-!
 # 定理
@@ -9,7 +9,7 @@ import LeanAtlas
 4. 対策の検証: safe 設計の SC1 は任意長トレースで成り立つ（帰納法）。SC1〜SC3 は有界に全数検査する
 5. 残留ハザード: safe 設計でもログソース故障では H3 が起きる
 -/
-namespace BatchHazard
+namespace RenewalNotice
 
 /-! ## 1. 局所的正しさ -/
 
@@ -134,4 +134,4 @@ theorem safe_no_H2 (t : List Action) : sc2 (run .safe init t) = true := by
 @[formalMeta "残留ハザードH3" "対策版でもログ故障で対象者が漏れる" "STPA: 残留 Hazard → 新しい安全要求" mainTheorem, confidence high, proof_progress complete]
 theorem safe_residual_H3 : sc3 (run .safe init traceSilent) = false := by decide
 
-end BatchHazard
+end RenewalNotice

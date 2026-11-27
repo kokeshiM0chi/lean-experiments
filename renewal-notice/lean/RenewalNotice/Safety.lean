@@ -1,4 +1,4 @@
-import BatchHazard.Model
+import RenewalNotice.Model
 /-!
 # Loss / Hazard / Safety Constraint
 
@@ -10,7 +10,7 @@ import BatchHazard.Model
 
 ハザードは「安全制約を満たさない到達可能状態が存在すること」として定義する。
 -/
-namespace BatchHazard
+namespace RenewalNotice
 
 def nodupB : List User → Bool
   | []      => true
@@ -48,4 +48,4 @@ def Hazard.describe : Hazard → String
 
 def safeAll (s : State) : Bool := sc1 s && sc2 s && sc3 s
 
-end BatchHazard
+end RenewalNotice

@@ -1,9 +1,9 @@
-import BatchHazard
-open BatchHazard
+import RenewalNotice
+open RenewalNotice
 
 /-! 各設計とハザードの組について最短の反例を探す。
     人間向けのレポートは stderr、Go テスト用の JSON は stdout に出す。
-    使い方: lake exe hazards > out/counterexamples.json -/
+    使い方: lake exe explore > out/counterexamples.json -/
 
 def actionStr : Action → String
   | .runA        => "A"

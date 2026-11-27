@@ -1,4 +1,4 @@
-# 退会案内通知バッチ: STPA のハザードを Lean で形式化するサンプル
+# renewal-notice: 契約更新前の退会案内アプリと、そのハザードの Lean による形式化
 
 ```
 go/    Go の webapp（バッチ A〜D と HTTP API）とテスト
@@ -11,7 +11,7 @@ lean/  同じシステムの Lean 4 モデル、定理、反例探索（Mathlib 
 # Lean（elan が必要: https://github.com/leanprover/elan）
 cd lean
 lake build                                  # 定理をすべて検査する
-lake exe hazards > out/counterexamples.json # 反例を探す（レポートは stderr に出る）
+lake exe explore > out/counterexamples.json # 反例を探す（レポートは stderr に出る）
 
 # Go
 cd ../go

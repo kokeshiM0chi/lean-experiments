@@ -1,6 +1,6 @@
 // Package batch は有料会員への退会案内通知を行う4つのバッチを実装する。
 //
-// この実装は lean/BatchHazard/Model.lean の形式モデルと1対1に対応している。
+// この実装は lean/RenewalNotice/Model.lean の形式モデルと1対1に対応している。
 // 型・関数名の対応はコメントの「Lean:」で示す。
 package batch
 
