@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>01-model.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="1-アプリのモデルmodellean">1. アプリのモデル（<code>Model.lean</code>）</h1>
+<p>ソース：<a href="../lean/RenewalNotice/Model.lean"><code>lean/RenewalNotice/Model.lean</code></a></p>
+<h2 id="このファイルで言いたいこと">このファイルで言いたいこと</h2>
+<p>Go で実装したアプリ（<a href="../go/batch/system.go"><code>go/batch/system.go</code></a>）を、Lean の関数として写す。
+STPA の制御構造の要素を、次のように型と関数に対応させている。</p>
+<table>
+<thead>
+<tr>
+<th>STPA の要素</th>
+<th>このファイル</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>制御対象プロセス（現実）</td>
+<td><code>World</code></td>
+</tr>
+<tr>
+<td>プロセスモデル（コントローラーの認識）</td>
+<td>表 <code>tA</code>・<code>tB</code>・<code>tC</code>（<code>Table</code>）</td>
+</tr>
+<tr>
+<td>コントローラー</td>
+<td><code>batchA</code>〜<code>batchD</code></td>
+</tr>
+<tr>
+<td>制御動作・外乱</td>
+<td><code>Action</code></td>
+</tr>
+<tr>
+<td>スケジューラー</td>
+<td><code>step</code>、<code>run</code></td>
+</tr>
+</tbody>
+</table>
+<p>ここには定理はない。後の章で、ここで定義した関数について定理を書く。</p>
+<h2 id="現実world">現実：<code>World</code></h2>
+<pre class="hljs"><code><div>abbrev User := Nat
+
+/-- 制御対象プロセスの真の状態。 -/
+structure World where
+  users    : List User
+  inactive : List User
+  renewing : List User
+  logOk    : Bool := true
+deriving Repr
+
+/-- 真の通知対象（非アクティブかつ翌月更新）。 -/
+def World.isTarget (w : World) (u : User) : Bool :=
+  w.inactive.contains u &amp;&amp; w.renewing.contains u
+
+/-- バッチ A が読む利用ログソース。故障すると 0 件を返す。 -/
+def World.inactiveLog (w : World) : List User :=
+  if w.logOk then w.inactive else []
+</div></code></pre>
+<ul>
+<li>会員は自然数（0, 1, 2, …）で表す</li>
+<li><code>inactive</code> は「本当に使っていない会員」、<code>renewing</code> は「本当に翌月更新の会員」。バッチはこれを直接は見られない</li>
+<li><code>isTarget</code> は「本当の通知対象か」の判定。安全制約（<a href="02-safety-and-uca.md">2章</a>）は、これを基準にする</li>
+<li><code>logOk</code> が false になると、バッチA が読む利用ログ（<code>inactiveLog</code>）が空になる。元記事のシナリオD（テーブル名が変わって0件になる）を表すための値である</li>
+</ul>
+<h2 id="バッチの認識table">バッチの認識：<code>Table</code></h2>
+<pre class="hljs"><code><div>/-- 抽出結果テーブル（プロセスモデル）。`asOf` は基準日。 -/
+structure Table where
+  asOf : Nat
+  rows : List User
+deriving Repr
+</div></code></pre>
+<p>各バッチが書き出す表である。<code>asOf</code> は「いつのデータか」を表す基準日。バッチ同士は、この表だけでつながっている。</p>
+<h2 id="全体の状態state">全体の状態：<code>State</code></h2>
+<pre class="hljs"><code><div>inductive JobResult where
+  | notRun | ok | failed
+deriving Repr, DecidableEq
+
+structure State where
+  today : Nat
+  world : World
+  tA    : Table
+  tB    : Table
+  tC    : Table
+  /-- 配信基盤が受理した通知。`(宛先, 送信時点で本当に対象者だったか)`。
+      第2成分は観測者視点の真値で、バッチ自身は知らない。 -/
+  sent  : List (User × Bool)
+  rA : JobResult := .notRun
+  rB : JobResult := .notRun
+  rC : JobResult := .notRun
+  rD : JobResult := .notRun
+  /-- tC を作ったときに実際に使った tA・tB のうち、古いほうの基準日。
+      `sent` の第2成分と同じく観測者視点の真値で、バッチ自身は見ない。
+      naive の C は入力が古くても tC に今日の日付を付けるので、
+      tC の `asOf` だけでは「今日の抽出が終わる前に作った表か」が分からない。 -/
+  tCInputsAsOf : Nat := 0
+deriving Repr
+</div></code></pre>
+<p>状態には、2種類の情報が入っている。</p>
+<table>
+<thead>
+<tr>
+<th>種類</th>
+<th>フィールド</th>
+<th>誰が見るか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アプリが実際に持つ情報</td>
+<td><code>today</code>、<code>tA</code>、<code>tB</code>、<code>tC</code>、<code>rA</code>〜<code>rD</code>、<code>sent</code> の宛先</td>
+<td>バッチ</td>
+</tr>
+<tr>
+<td>観測者だけが知る真実</td>
+<td><code>world</code>、<code>sent</code> の第2成分、<code>tCInputsAsOf</code></td>
+<td>安全制約と UCA の判定だけ</td>
+</tr>
+</tbody>
+</table>
+<p>観測者だけが知る情報を持たせているのは、「バッチの認識が現実とずれる」ことを判定するためである。</p>
+<ul>
+<li><code>sent</code> の第2成分には、送った瞬間に相手が本当に対象者だったか（<code>isTarget</code> の値）を記録する。送った後で会員が利用を再開しても、この記録は変わらない</li>
+<li><code>tCInputsAsOf</code> には、tC を作るのに実際に使った表の基準日を記録する。対策なし版の C は、古い表から作っても tC に今日の日付を付けてしまうので、tC の <code>asOf</code> だけでは本当の鮮度が分からない</li>
+</ul>
+<p><code>rA</code>〜<code>rD</code> は、スケジューラーや監視から見えるジョブの結果である。</p>
+<h2 id="設計と動作designaction">設計と動作：<code>Design</code>、<code>Action</code></h2>
+<pre class="hljs"><code><div>/-- `naive`: 各バッチは単体仕様どおりだが、バッチ間の前提を確認しない。
+    `safe` : STPA で導いた安全制約を実装したもの。 -/
+inductive Design where
+  | naive | safe
+deriving Repr, DecidableEq
+
+inductive Action where
+  | runA | runB | runC | runD
+  /-- 配信基盤が k 件を受理した後で、D が失敗として終わる。
+      途中での異常終了（記事のシナリオB）と、応答のタイムアウト（シナリオC）の両方を表す。 -/
+  | crashD (k : Nat)
+  /-- 外乱: ユーザー u が利用を再開する。 -/
+  | use (u : User)
+  /-- 外乱: 利用ログソースが壊れる（テーブル名変更などで 0 件を返す）。 -/
+  | breakSource
+deriving Repr, DecidableEq
+</div></code></pre>
+<ul>
+<li><code>Design</code> は2つの設計を切り替える。同じバッチでも、設計によって動きが変わる</li>
+<li><code>Action</code> は、スケジューラーが起こすこと（バッチの実行）と、外から起きること（外乱）を並べたもの。実行順は <code>List Action</code>（たとえば <code>[.runB, .runC, .runA, .runD]</code>）で表す</li>
+</ul>
+<h2 id="バッチ-ab">バッチ A・B</h2>
+<pre class="hljs"><code><div>def sentUsers (s : State) : List User := s.sent.map (·.1)
+
+def batchA (s : State) : State :=
+  { s with
+    tA := { asOf := s.today, rows := s.world.users.filter (fun u =&gt; s.world.inactiveLog.contains u) }
+    rA := .ok }
+
+def batchB (s : State) : State :=
+  { s with
+    tB := { asOf := s.today, rows := s.world.users.filter (fun u =&gt; s.world.renewing.contains u) }
+    rB := .ok }
+</div></code></pre>
+<ul>
+<li>バッチは「状態を受け取り、新しい状態を返す関数」である</li>
+<li>A は利用ログから非アクティブな会員を抜き出し、今日の日付で tA に書く。B は契約情報から翌月更新の会員を抜き出し、tB に書く</li>
+<li>どちらも、設計（naive / safe）によらず同じ定義である</li>
+<li>A は利用ログが壊れていても（<code>inactiveLog</code> が空でも）、0件の表を書いて正常終了する。単体として見れば「読んだデータを正しく書いた」ことになる</li>
+</ul>
+<h2 id="バッチ-c">バッチ C</h2>
+<pre class="hljs"><code><div>def intersect (a b : Table) (asOf : Nat) : Table :=
+  { asOf := asOf, rows := a.rows.filter (fun u =&gt; b.rows.contains u) }
+
+/-- naive は入力の鮮度を確認せず、結果に今日の日付を付ける。
+    プロセスモデルが現実とずれる原因になる。 -/
+def batchC : Design → State → State
+  | .naive, s =&gt; { s with tC := intersect s.tA s.tB s.today, rC := .ok,
+                          tCInputsAsOf := min s.tA.asOf s.tB.asOf }
+  | .safe,  s =&gt;
+    if s.tA.asOf = s.today ∧ s.tB.asOf = s.today then
+      { s with tC := intersect s.tA s.tB s.today, rC := .ok,
+               tCInputsAsOf := min s.tA.asOf s.tB.asOf }
+    else
+      { s with rC := .failed }
+</div></code></pre>
+<ul>
+<li>naive：tA と tB の積集合を取り、今日の日付で tC に書く。tA や tB が古くても気にしない</li>
+<li>safe：tA と tB がどちらも今日のものなら積集合を取る。そうでなければ tC を変えずに失敗で終わる（元記事の設計要求「基準日時を確認する」）</li>
+<li>どちらも <code>tCInputsAsOf</code> に、実際に使った表の基準日（古いほう）を記録する</li>
+</ul>
+<h2 id="バッチ-d">バッチ D</h2>
+<pre class="hljs"><code><div>def record (s : State) (us : List User) : List (User × Bool) :=
+  us.map (fun u =&gt; (u, s.world.isTarget u))
+
+def limit : Option Nat → List User → List User
+  | none,   us =&gt; us
+  | some n, us =&gt; us.take n
+
+def doneResult : Option Nat → JobResult
+  | none   =&gt; .ok
+  | some _ =&gt; .failed
+
+def batchDNaive (k : Option Nat) (s : State) : State :=
+  { s with sent := s.sent ++ record s (limit k s.tC.rows), rD := doneResult k }
+
+/-- safe な D が実際に送る相手。
+    * 配信基盤の受理記録（フィードバック）を見て、送信済みは除外する
+    * 送る直前に真のソースで対象者かを確認する -/
+def pending (s : State) : List User :=
+  s.tC.rows.filter (fun u =&gt; !(sentUsers s).contains u &amp;&amp; s.world.isTarget u)
+
+def batchDSafe (k : Option Nat) (s : State) : State :=
+  if s.tC.asOf = s.today then
+    { s with sent := s.sent ++ record s (limit k (pending s)), rD := doneResult k }
+  else
+    { s with rD := .failed }
+
+def batchD : Design → Option Nat → State → State
+  | .naive =&gt; batchDNaive
+  | .safe  =&gt; batchDSafe
+</div></code></pre>
+<ul>
+<li><code>k</code> は「途中で失敗するか」を表す。<code>none</code> なら全員に送って正常終了、<code>some n</code> なら n 件を受理させたところで失敗として終わる</li>
+<li><code>record</code> は、送った相手と「その瞬間に本当に対象だったか」を組にして記録する</li>
+<li>naive：tC の全員に送る。送信済みかどうかは見ない</li>
+<li>safe：tC が今日のものでなければ失敗で終わる。今日のものなら、<code>pending</code> で「まだ受理されていない」かつ「今も対象」の人だけに送る（元記事の設計要求「通知指示を一意に管理する」「結果が不明なら自動再送しない」）</li>
+</ul>
+<h2 id="スケジューラーsteprun">スケジューラー：<code>step</code>、<code>run</code></h2>
+<pre class="hljs"><code><div>def step (d : Design) (s : State) : Action → State
+  | .runA        =&gt; batchA s
+  | .runB        =&gt; batchB s
+  | .runC        =&gt; batchC d s
+  | .runD        =&gt; batchD d none s
+  | .crashD k    =&gt; batchD d (some k) s
+  | .use u       =&gt; { s with world := { s.world with inactive := s.world.inactive.filter (· != u) } }
+  | .breakSource =&gt; { s with world := { s.world with logOk := false } }
+
+def run (d : Design) : State → List Action → State
+  | s, []     =&gt; s
+  | s, a :: t =&gt; run d (step d s a) t
+</div></code></pre>
+<ul>
+<li><code>step</code> は1つの動作を実行する。<code>use u</code> は会員 u を「非アクティブ」から外し、<code>breakSource</code> は利用ログを壊す</li>
+<li><code>run</code> は実行順を先頭から1つずつ実行する。<code>a :: t</code> は「先頭が a、残りが t」のリスト</li>
+<li>スケジューラーは順序を保証しないので、どんな <code>List Action</code> でも <code>run</code> に渡してよい。この「どんな順でも」が、後で定理の <code>∀ t : List Action</code> になる</li>
+</ul>
+<h2 id="初期状態init">初期状態：<code>init</code></h2>
+<pre class="hljs"><code><div>/-- 初期状態。前回サイクル（day 0）の抽出結果が残ったまま、今日（day 1）のサイクルを始める。
+
+* 会員0：翌月更新を迎えるが、最近利用を再開した（前回の抽出では非アクティブだった）→ 通知対象外
+* 会員1・2：翌月更新を迎え、今も使っていない → 通知対象
+
+前回の表 tA には会員0が残っているので、古い tA を使うと会員0に案内が届いてしまう
+（記事のシナリオA「前回の抽出結果が利用され、本来対象外のユーザーに退会案内が送信される」）。 -/
+def init : State :=
+  { today := 1
+    world := { users := [0, 1, 2], inactive := [1, 2], renewing := [0, 1, 2] }
+    tA    := { asOf := 0, rows := [0, 1] }
+    tB    := { asOf := 0, rows := [0] }
+    tC    := { asOf := 0, rows := [0] }
+    sent  := [] }
+</div></code></pre>
+<table>
+<thead>
+<tr>
+<th>会員</th>
+<th>翌月更新</th>
+<th>今の利用状況</th>
+<th>本当の通知対象か</th>
+<th>前回の tA にいるか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>する</td>
+<td>最近利用を再開した</td>
+<td>対象外</td>
+<td>いる</td>
+</tr>
+<tr>
+<td>1</td>
+<td>する</td>
+<td>使っていない</td>
+<td>対象</td>
+<td>いる</td>
+</tr>
+<tr>
+<td>2</td>
+<td>する</td>
+<td>使っていない</td>
+<td>対象</td>
+<td>いない</td>
+</tr>
+</tbody>
+</table>
+<p>前回の表が残っているので、どのバッチから実行しても意味のある状態になる。</p>
+<h2 id="計算してみる">計算してみる</h2>
+<p>シナリオA（B → C → A → D）を naive で実行すると、次のように進む。</p>
+<table>
+<thead>
+<tr>
+<th>動作</th>
+<th>変わったところ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>（初期）</td>
+<td>tA = (day 0, [0, 1])、tB = (day 0, [0])、tC = (day 0, [0])</td>
+</tr>
+<tr>
+<td>B</td>
+<td>tB = (day 1, [0, 1, 2])</td>
+</tr>
+<tr>
+<td>C</td>
+<td>tC = (day 1, [0, 1])。古い tA と新しい tB の積集合。<code>tCInputsAsOf</code> = 0</td>
+</tr>
+<tr>
+<td>A</td>
+<td>tA = (day 1, [1, 2])。ただし C はもう終わっている</td>
+</tr>
+<tr>
+<td>D</td>
+<td>tC の [0, 1] に送る。<code>sent</code> = [(0, false), (1, true)]</td>
+</tr>
+</tbody>
+</table>
+<p><code>#eval</code> で確かめた結果：</p>
+<pre class="hljs"><code><div>#eval (run .naive init scenarioA).tC            -- { asOf := 1, rows := [0, 1] }
+#eval (run .naive init scenarioA).tCInputsAsOf  -- 0
+#eval (run .naive init scenarioA).sent          -- [(0, false), (1, true)]
+</div></code></pre>
+<p>会員0（対象外）に送ってしまい、会員2（対象）には送っていない。これが<a href="04-hazards.md">4章</a>で証明するハザードである。</p>
+
+</body>
+</html>

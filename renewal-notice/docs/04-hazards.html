@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>04-hazards.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="4-それでも組み合わせると危険scenariosleanhazardslean">4. それでも組み合わせると危険（<code>Scenarios.lean</code>、<code>Hazards.lean</code>）</h1>
+<p>ソース：<a href="../lean/RenewalNotice/Scenarios.lean"><code>lean/RenewalNotice/Scenarios.lean</code></a>、<a href="../lean/RenewalNotice/Hazards.lean"><code>lean/RenewalNotice/Hazards.lean</code></a></p>
+<h2 id="この章で言いたいこと">この章で言いたいこと</h2>
+<p><strong>各バッチは単体で正しい（<a href="03-spec.md">3章</a>）のに、組み合わせると安全制約を破る実行順がある。</strong> これが STAMP の「部品が正常でも事故は起きる」の形式化である。</p>
+<p>具体的には、次の3種類の定理を書いている。</p>
+<table>
+<thead>
+<tr>
+<th>言いたいこと</th>
+<th>定理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>元記事の Loss Scenario A〜D で、実際にハザードが起きる</td>
+<td><code>scenarioA_H1</code>、<code>scenarioB_H2</code>、<code>scenarioC_H2</code>、<code>scenarioD_H3</code></td>
+</tr>
+<tr>
+<td>元記事の UCA が実際に起き、ハザードにつながる</td>
+<td><code>uca_timing_naive</code>、<code>uca_providing_naive</code>、<code>uca_notProviding_naive</code></td>
+</tr>
+<tr>
+<td>まとめて「対策なし版は安全ではない」</td>
+<td><code>naive_unsafe</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="ハザードの扱い方">ハザードの扱い方</h2>
+<p>「証明できなかったらハザード」とはしていない。Lean は、証明に失敗した理由（主張が偽なのか、証明が下手なだけなのか）を区別できないからである。</p>
+<p>その代わりに、<strong>安全制約を破る実行順を具体的に1つ示し、それで本当に破れることを Lean に検査させる。</strong> 示した実行順が、STPA の Loss Scenario になる。</p>
+<h2 id="シナリオを実行順として書くscenarioslean">シナリオを実行順として書く（<code>Scenarios.lean</code>）</h2>
+<pre class="hljs"><code><div>/-- シナリオA（バッチの依存関係が守られない）：
+    非アクティブユーザー抽出（A）が遅延しているのに、時刻設定どおりに C が起動し、
+    前回の A の結果で積集合を取る。その後で A が終わり、D が送る。 -/
+def scenarioA : List Action := [.runB, .runC, .runA, .runD]
+
+/-- シナリオB（部分失敗後のリトライで重複）：
+    D が対象者の一部（2人中1人）に送った時点で異常終了し、スケジューラーが D 全体を再実行する。 -/
+def scenarioB : List Action := [.runA, .runB, .runC, .crashD 1, .runD]
+
+/-- シナリオC（送信状態を認識できない）：
+    配信基盤は全員分を受理したが、応答がタイムアウトして D は失敗として終わる。
+    スケジューラーが D を再実行する。 -/
+def scenarioC : List Action := [.runA, .runB, .runC, .crashD 2, .runD]
+
+/-- シナリオD（正常終了したのに通知が送られない）：
+    利用ログのテーブル名が変わり、A が 0 件のまま正常終了する。後続もすべて正常終了する。 -/
+def scenarioD : List Action := [.breakSource, .runA, .runB, .runC, .runD]
+</div></code></pre>
+<p>元記事の文章を、<code>Action</code> の並びに置き換えただけである。「A が遅延して C が先に起動する」は「C を A より前に並べる」、「タイムアウト」は「<code>crashD 2</code>（2件受理された後で失敗）」と表している。</p>
+<p>記事にないシナリオも同じファイルに置いている。</p>
+<pre class="hljs"><code><div>/-- 自動探索で見つかった最短の H1：前回分の表 tC のまま D が送る。 -/
+def traceOnlyD : List Action := [.runD]
+/-- 自動探索で見つかった最短の H2：送信済みを確かめずに D を2回実行する。 -/
+def traceDTwice : List Action := [.runD, .runD]
+/-- 自動探索で見つかった H3：D が C より先に古い表で送り、最後に C が終わって全ジョブが正常に見える。 -/
+def traceDBeforeC : List Action := [.runA, .runB, .runD, .runC]
+/-- C が対象を確定した後、D が送る前に会員が利用を再開する（TOCTOU）。 -/
+def traceTOCTOU : List Action := [.runA, .runB, .runC, .use 1, .runD]
+</div></code></pre>
+<h2 id="元記事のシナリオでハザードが起きる">元記事のシナリオでハザードが起きる</h2>
+<h3 id="ここで言いたいこと">ここで言いたいこと</h3>
+<p>元記事のシナリオ A〜D を対策なし版（naive）で実行すると、それぞれ安全制約が破れる。</p>
+<pre class="hljs"><code><div>@[formalMeta &quot;シナリオA：依存関係が守られない&quot; &quot;Aが遅延中にCが時刻どおり起動し、前回のAの結果で対象を作るので、対象外の会員0に届く&quot; &quot;記事 Loss Scenario A → H1 → L1&quot;,
+  confidence high, proof_progress complete]
+theorem scenarioA_H1 : sc1 (run .naive init scenarioA) = false := by decide
+
+@[formalMeta &quot;シナリオB：部分失敗後のリトライ&quot; &quot;Dが1人に送った時点で異常終了し、D全体の再実行でその人にまた送る&quot; &quot;記事 Loss Scenario B → H2 → L2&quot;,
+  confidence high, proof_progress complete]
+theorem scenarioB_H2 : sc2 (run .naive init scenarioB) = false := by decide
+
+@[formalMeta &quot;シナリオC：送信状態を認識できない&quot; &quot;配信基盤は全員分を受理したがタイムアウトし、Dの再実行で全員にまた送る&quot; &quot;記事 Loss Scenario C → H2 → L2&quot;,
+  confidence high, proof_progress complete]
+theorem scenarioC_H2 : sc2 (run .naive init scenarioC) = false := by decide
+
+@[formalMeta &quot;シナリオD：正常終了なのに届かない&quot; &quot;ログ故障でAが0件のまま正常終了し、全ジョブ正常なのに対象者に届かない&quot; &quot;記事 Loss Scenario D → H3 → L3&quot;,
+  confidence high, proof_progress complete]
+theorem scenarioD_H3 : sc3 (run .naive init scenarioD) = false := by decide
+</div></code></pre>
+<h3 id="読み方">読み方</h3>
+<p>たとえば <code>scenarioA_H1</code> は、「初期状態からシナリオA の順に naive のバッチを実行すると、安全制約 SC1 が false になる（＝ H1 が起きる）」と読む。</p>
+<h3 id="証明の中身">証明の中身</h3>
+<p>どれも <code>by decide</code> の1語である。<code>decide</code> は、主張を実際に計算して確かめる。</p>
+<ol>
+<li><code>run .naive init scenarioA</code> を計算する。<a href="01-model.md">1章</a>の表のとおり、送信記録は <code>[(0, false), (1, true)]</code> になる</li>
+<li><code>sc1</code> を計算する。送信記録の第2成分に false があるので、<code>sc1</code> は false</li>
+<li>主張は <code>false = false</code> になり、正しいと確かめられる</li>
+</ol>
+<p>計算は Lean のカーネル（証明を検査する核の部分）が行うので、計算結果そのものが証明になる。</p>
+<p>各シナリオの計算結果は次のとおり。</p>
+<table>
+<thead>
+<tr>
+<th>シナリオ</th>
+<th>送信記録（宛先）</th>
+<th>破れる安全制約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A：B, C, A, D</td>
+<td>0, 1（会員0は対象外、会員2には届かない）</td>
+<td>SC1（H1）。全ジョブ正常終了なので SC3（H3）も</td>
+</tr>
+<tr>
+<td>B：A, B, C, crashD 1, D</td>
+<td>1, 1, 2</td>
+<td>SC2（H2）</td>
+</tr>
+<tr>
+<td>C：A, B, C, crashD 2, D</td>
+<td>1, 2, 1, 2</td>
+<td>SC2（H2）</td>
+</tr>
+<tr>
+<td>D：breakSource, A, B, C, D</td>
+<td>なし</td>
+<td>SC3（H3）</td>
+</tr>
+</tbody>
+</table>
+<pre class="hljs"><code><div>#eval sentUsers (run .naive init scenarioC)   -- [1, 2, 1, 2]
+</div></code></pre>
+<h2 id="uca-が起きてハザードにつながる">UCA が起きて、ハザードにつながる</h2>
+<h3 id="ここで言いたいこと-1">ここで言いたいこと</h3>
+<p>元記事の UCA 表の3つが、対策なし版で実際に起き、それぞれハザードにつながる。</p>
+<pre class="hljs"><code><div>@[formalMeta &quot;UCA Timing：抽出完了前に通知&quot; &quot;シナリオAの最後のDは、今日のAの結果から作られていない対象で送信を始め、H1になる&quot; &quot;記事 UCA Timing/Order → H1&quot;,
+  confidence high, proof_progress complete]
+theorem uca_timing_naive :
+    ucaTiming .naive (run .naive init [.runB, .runC, .runA]) .runD = true ∧
+    sc1 (run .naive init scenarioA) = false := by decide
+
+@[formalMeta &quot;UCA Providing：通知済みの人に再送&quot; &quot;シナリオCで、配信基盤が受理済みの人に、Dの再実行でまた送り、H2になる&quot; &quot;記事 UCA Providing → H2&quot;,
+  confidence high, proof_progress complete]
+theorem uca_providing_naive :
+    ucaProviding .naive (run .naive init [.runA, .runB, .runC, .crashD 2]) .runD = true ∧
+    sc2 (run .naive init scenarioC) = false := by decide
+
+@[formalMeta &quot;UCA Not Providing：抽出済みなのに送らない&quot; &quot;DがCより先に古い表で送り、最後にCが終わると、今日の対象者に送られないまま全ジョブ正常になり、H3になる&quot; &quot;記事 UCA Not Providing → H3&quot;,
+  confidence high, proof_progress complete]
+theorem uca_notProviding_naive :
+    ucaNotProviding (run .naive init traceDBeforeC) = true ∧
+    sc3 (run .naive init traceDBeforeC) = false := by decide
+</div></code></pre>
+<h3 id="読み方-1">読み方</h3>
+<p><code>uca_timing_naive</code> は2つの主張を「かつ」でつないでいる。</p>
+<ol>
+<li>シナリオA の途中（B, C, A まで実行した状態）で D を出すと、それは UCA の Timing に当たる</li>
+<li>シナリオA を最後まで実行すると、SC1 が破れる（H1）</li>
+</ol>
+<p>つまり「シナリオA の最後の D が UCA であり、その結果 H1 が起きる」という因果のつながりを、1つの定理として書いている。他の2つも同じ形である。</p>
+<h3 id="証明の中身-1">証明の中身</h3>
+<p>どれも <code>by decide</code>。状態を計算し、UCA の関数と安全制約の関数がそれぞれ true / false になることを確かめている。</p>
+<h2 id="シナリオd-は通知制御の-uca-ではない">シナリオD は通知制御の UCA ではない</h2>
+<h3 id="ここで言いたいこと-2">ここで言いたいこと</h3>
+<p>形式化して初めて分かったことがある。シナリオD では、通知制御（C と D）の UCA は1つも起きていない。</p>
+<pre class="hljs"><code><div>@[formalMeta &quot;シナリオDは通知制御のUCAではない&quot; &quot;シナリオDでは通知制御のUCAは起きていない。H3の原因は、A（抽出）の出力が不完全なこと&quot; &quot;記事 Loss Scenario D の分析&quot;,
+  confidence high, proof_progress complete]
+theorem scenarioD_no_notification_uca :
+    ucaInTrace .naive .timing init scenarioD = false ∧
+    ucaInTrace .naive .providing init scenarioD = false ∧
+    ucaInTrace .naive .notProviding init scenarioD = false := by decide
+</div></code></pre>
+<h3 id="読み方-2">読み方</h3>
+<p>シナリオD のどの時点でも、Timing・Providing・Not Providing のどれも起きていない。</p>
+<p>シナリオD では、A が0件の表を書く。C は0件の積集合を取り、D は0人に送る。通知制御は、渡された対象者（0件）に対して正しく動いている。それでも H3（対象者に届かない）は起きる（<code>scenarioD_H3</code>）。</p>
+<p>原因は、抽出バッチ A の出力が不完全なことである。元記事の UCA 表は通知制御だけを対象にしているので、このシナリオの原因を UCA として捉えるには、抽出バッチの制御動作についても UCA を考える必要がある。</p>
+<h2 id="記事にないシナリオ">記事にないシナリオ</h2>
+<pre class="hljs"><code><div>@[formalMeta &quot;追加：Dだけで起きるH1&quot; &quot;前回分の表tCのままDが送る（自動探索で見つかった最短の反例）&quot; &quot;Loss Scenario → H1&quot;,
+  confidence high, proof_progress complete]
+theorem H1_onlyD : sc1 (run .naive init traceOnlyD) = false := by decide
+
+@[formalMeta &quot;追加：Dを2回でH2&quot; &quot;送信済みを確かめずにDを再実行する（自動探索で見つかった最短の反例）&quot; &quot;Loss Scenario → H2&quot;,
+  confidence high, proof_progress complete]
+theorem H2_DTwice : sc2 (run .naive init traceDTwice) = false := by decide
+
+@[formalMeta &quot;追加：TOCTOU&quot; &quot;Cが対象を確定した後、Dが送る前に会員が利用を再開し、対象外に送る&quot; &quot;Loss Scenario → H1&quot;,
+  confidence high, proof_progress complete]
+theorem H1_toctou : sc1 (run .naive init traceTOCTOU) = false := by decide
+</div></code></pre>
+<p><code>H1_onlyD</code> と <code>H2_DTwice</code> は、<a href="06-counterexamples.md">6章</a>の自動探索が見つけた最短の反例を、そのまま定理にしたものである。元記事のシナリオより短く、「前回分の表のまま D を1回実行するだけで H1 が起きる」ことを示している。</p>
+<h2 id="まとめて対策なし版は安全ではない">まとめて「対策なし版は安全ではない」</h2>
+<h3 id="ここで言いたいこと-3">ここで言いたいこと</h3>
+<p>個々のシナリオではなく、「どんな実行順でも安全」という主張そのものが偽であることを示す。</p>
+<pre class="hljs"><code><div>@[formalMeta &quot;部品は正常でもシステムは危険&quot; &quot;各バッチは単体仕様どおりだが、組み合わせると安全制約を破る実行順が存在する&quot; &quot;STPA: Hazard の存在&quot; mainTheorem,
+  confidence high, proof_progress complete]
+theorem naive_unsafe :
+    ¬ ∀ t : List Action, safeAll (run .naive init t) = true := by
+  intro h
+  exact absurd (h scenarioB) (by decide)
+</div></code></pre>
+<h3 id="読み方-3">読み方</h3>
+<p>「どんな実行順 <code>t</code> でも、naive は安全制約をすべて満たす」は成り立たない。</p>
+<p><a href="03-spec.md">3章</a>の「各バッチは単体で正しい」と並べると、「部品は正常なのに、システムは安全ではない」という STAMP の主張そのものになる。</p>
+<h3 id="証明の中身-2">証明の中身</h3>
+<p>「〜ではない」を示すには、「〜だと仮定すると矛盾する」ことを示す。</p>
+<ol>
+<li><code>intro h</code>：「どんな実行順でも安全」を仮定として取り出し、<code>h</code> と名付ける</li>
+<li><code>h scenarioB</code>：仮定 <code>h</code> をシナリオB に当てはめると、「シナリオB でも安全（<code>safeAll ... = true</code>）」が得られる</li>
+<li><code>by decide</code>：一方で、シナリオB を実際に計算すると <code>safeAll</code> は false になる。つまり「<code>safeAll ... = true</code> ではない」</li>
+<li><code>absurd</code>：同じ主張について「成り立つ」と「成り立たない」が両方得られたので、矛盾。これで証明が終わる</li>
+</ol>
+<p>反例を1つ（ここではシナリオB）示すだけで、全称の主張を否定できる。</p>
+<h2 id="対策後も残るハザード">対策後も残るハザード</h2>
+<pre class="hljs"><code><div>@[formalMeta &quot;残留ハザード：シナリオD&quot; &quot;対策版でも、ログ故障でAが0件になると対象者に届かない&quot; &quot;記事 Loss Scenario D → 新しい安全要求（対象者集合の完全性）&quot; mainTheorem,
+  confidence high, proof_progress complete]
+theorem safe_residual_scenarioD : sc3 (run .safe init scenarioD) = false := by decide
+</div></code></pre>
+<p>読み方：対策版（safe）でシナリオD を実行しても、SC3 が破れる（H3 が残る）。</p>
+<p>対策版は「基準日の確認」と「送信済みの確認」を実装したが、「抽出結果の件数が正しいか」は確かめていない。A が0件でも、今日の日付が付いていれば C も D も先に進んでしまう。この定理が、元記事の残りの設計要求（対象者集合の完全性の確認、0件の検証）が必要な理由になっている。</p>
+
+</body>
+</html>

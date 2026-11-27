@@ -12,4 +12,5 @@ Lean 4 の実験用プロジェクト集。
 
 | 記事 | 対応するコード |
 |---|---|
-| [正常に動くバッチの組み合わせで事故が起きる：STPAのハザードをLeanで書いてみた](articles/stpa-lean-renewal-notice.md) | [renewal-notice](renewal-notice/) |
+| [Leanで安全制約を書くと、ハザード候補がビルドエラーとして見つかる](articles/lean-safety-constraint-build-error.md)（シンプル版） | [renewal-notice](renewal-notice/) |
+| [正常に動くバッチの組み合わせで事故が起きる：STPAのハザードをLeanで書いてみた](articles/stpa-lean-renewal-notice.md)（詳しい版） | [renewal-notice](renewal-notice/) |

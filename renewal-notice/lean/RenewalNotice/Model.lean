@@ -55,6 +55,11 @@ structure State where
   rB : JobResult := .notRun
   rC : JobResult := .notRun
   rD : JobResult := .notRun
+  /-- tC を作ったときに実際に使った tA・tB のうち、古いほうの基準日。
+      `sent` の第2成分と同じく観測者視点の真値で、バッチ自身は見ない。
+      naive の C は入力が古くても tC に今日の日付を付けるので、
+      tC の `asOf` だけでは「今日の抽出が終わる前に作った表か」が分からない。 -/
+  tCInputsAsOf : Nat := 0
 deriving Repr
 
 /-- `naive`: 各バッチは単体仕様どおりだが、バッチ間の前提を確認しない。
@@ -65,7 +70,8 @@ deriving Repr, DecidableEq
 
 inductive Action where
   | runA | runB | runC | runD
-  /-- D が k 件送ったところで異常終了する（タイムアウトを含む）。 -/
+  /-- 配信基盤が k 件を受理した後で、D が失敗として終わる。
+      途中での異常終了（記事のシナリオB）と、応答のタイムアウト（シナリオC）の両方を表す。 -/
   | crashD (k : Nat)
   /-- 外乱: ユーザー u が利用を再開する。 -/
   | use (u : User)
@@ -93,10 +99,12 @@ def intersect (a b : Table) (asOf : Nat) : Table :=
 /-- naive は入力の鮮度を確認せず、結果に今日の日付を付ける。
     プロセスモデルが現実とずれる原因になる。 -/
 def batchC : Design → State → State
-  | .naive, s => { s with tC := intersect s.tA s.tB s.today, rC := .ok }
+  | .naive, s => { s with tC := intersect s.tA s.tB s.today, rC := .ok,
+                          tCInputsAsOf := min s.tA.asOf s.tB.asOf }
   | .safe,  s =>
     if s.tA.asOf = s.today ∧ s.tB.asOf = s.today then
-      { s with tC := intersect s.tA s.tB s.today, rC := .ok }
+      { s with tC := intersect s.tA s.tB s.today, rC := .ok,
+               tCInputsAsOf := min s.tA.asOf s.tB.asOf }
     else
       { s with rC := .failed }
 
@@ -145,10 +153,16 @@ def run (d : Design) : State → List Action → State
   | s, []     => s
   | s, a :: t => run d (step d s a) t
 
-/-- 初期状態。前回サイクル（day 0）の抽出結果が残ったまま、今日（day 1）のサイクルを始める。 -/
+/-- 初期状態。前回サイクル（day 0）の抽出結果が残ったまま、今日（day 1）のサイクルを始める。
+
+* 会員0：翌月更新を迎えるが、最近利用を再開した（前回の抽出では非アクティブだった）→ 通知対象外
+* 会員1・2：翌月更新を迎え、今も使っていない → 通知対象
+
+前回の表 tA には会員0が残っているので、古い tA を使うと会員0に案内が届いてしまう
+（記事のシナリオA「前回の抽出結果が利用され、本来対象外のユーザーに退会案内が送信される」）。 -/
 def init : State :=
   { today := 1
-    world := { users := [0, 1, 2], inactive := [1, 2], renewing := [1, 2] }
+    world := { users := [0, 1, 2], inactive := [1, 2], renewing := [0, 1, 2] }
     tA    := { asOf := 0, rows := [0, 1] }
     tB    := { asOf := 0, rows := [0] }
     tC    := { asOf := 0, rows := [0] }

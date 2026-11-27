@@ -1,14 +1,38 @@
 name = "renewal-notice"
 defaultTargets = ["RenewalNotice", "explore"]
 
+# 定理を書くライブラリ
 [[lean_lib]]
 name = "RenewalNotice"
 
+# 反例を JSON に書き出す実行ファイル（Go のテストが読む）
 [[lean_exe]]
 name = "explore"
 root = "Main"
 
+# 証明状況の注記と可視化
 [[require]]
 name = "lean-atlas"
 git = "https://github.com/kokeshiM0chi/lean-atlas"
 rev = "main"
+
+# 以下は説明用のビルド対象。defaultTargets に含めないので、`lake build`（CI）では実行されない。
+# パターン1：組み合わせの安全制約を書かない → ビルド成功、ハザードは検出されない
+[[lean_lib]]
+name = "DetectWithoutConstraint"
+roots = ["Detect.WithoutConstraint"]
+
+# パターン2：組み合わせの安全制約を定理として書く → ビルド失敗、失敗箇所がハザードを指す
+[[lean_lib]]
+name = "DetectWithConstraint"
+roots = ["Detect.WithConstraint"]
+
+# 失敗したゴールから組み立てた反例を確かめる → ビルド成功
+[[lean_lib]]
+name = "DetectCounterexample"
+roots = ["Detect.Counterexample"]
+
+# 偽の警報の例：主張は正しいが、不変条件が足りずに証明が止まる → ビルド失敗
+[[lean_lib]]
+name = "DetectFalseAlarm"
+roots = ["Detect.FalseAlarm"]

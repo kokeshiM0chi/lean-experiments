@@ -1,54 +1,71 @@
-# renewal-notice: 契約更新前の退会案内アプリと、そのハザードの Lean による形式化
+# renewal-notice: 契約更新前の退会案内アプリと、その STPA 分析の Lean による形式化
+
+[STAMP/STPA を SRE の視点で解説した記事](https://zenn.dev/maruloop/articles/7ff108e29741b5)の例（退会案内バッチ）を題材に、
+アプリを Go で実装し、記事の Loss・Hazard・UCA・Loss Scenario を Lean 4 で形式化したもの。
+解説は [Zenn の記事](../articles/stpa-lean-renewal-notice.md) にある。Lean のソースコードの詳しい解説は [docs/](docs/README.md) にある。
 
 ```
 go/    Go の webapp（バッチ A〜D と HTTP API）とテスト
-lean/  同じシステムの Lean 4 モデル、定理、反例探索（Mathlib は使わない）
+lean/  同じシステムの Lean 4 モデル、定理、ビルド時の検査
 ```
 
 ## 実行
 
 ```sh
-# Lean（elan が必要: https://github.com/leanprover/elan）
 cd lean
-lake build                                  # 定理をすべて検査する
-lake exe explore > out/counterexamples.json # 反例を探す（レポートは stderr に出る）
-
-# Go
+lake build                                    # 定理の検査、ハザード・UCA の検出、証明状況の照合
+lake exe explore > out/counterexamples.json   # 反例を JSON に書き出す
 cd ../go
-go test ./... -v     # Lean の反例が実装でも再現するかを検査する
-go run ./cmd/server  # :8080
+go test ./... -count=1 -v                     # Lean の反例と記事のシナリオ A〜D を Go 実装で再生する
+go run ./cmd/server                           # :8080
 ```
 
-## STPA と Lean の対応
+## CI
 
-| STPA | Lean |
-|---|---|
-| 制御対象プロセス | `World`（真の状態） |
-| コントローラー / 制御動作 | `batchA`〜`batchD` / `Action` |
-| プロセスモデル | テーブル `tA` `tB` `tC`（`asOf` 付き） |
-| Safety Constraint | `sc1` `sc2` `sc3`（Bool の述語） |
-| Hazard | `∃ t, sc (run d init t) = false`（制約を破る到達可能状態がある） |
-| Loss Scenario | 反例のトレース `t` |
-| UCA | `firstUCA`: 初めて制約を破った（コンテキスト, 制御動作） |
-| 「部品は正常」 | `batchA_spec` など、各バッチの単体仕様の全称定理 |
+[`.github/workflows/renewal-notice.yml`](../.github/workflows/renewal-notice.yml) で、push のたびに次を実行する。
 
-「証明できない」ことは Lean の中からは判定できないので、次のように置き換えている。
+1. `lake build`（定理の検査、ハザード・UCA の検出、証明状況の照合）
+2. `lake exe explore` で反例を書き出す
+3. `go test` で、Lean の反例と記事のシナリオ A〜D を Go 実装に再生する
 
-* 証明できないかもしれない全称命題 `∀ t, 安全` について、その否定を証明する。
-  否定の証人となるトレースがハザードの Loss Scenario になる（`naive_unsafe`、`H1_stale` など）。
-* 証明の候補を探す段階では、有界モデル検査（`counterexample`）で反例を自動探索する。
-* 対策後の設計は、帰納法による全称証明（`safe_no_H1`）と有界の全数検査（`safe_bounded`）で検証する。
-* 検査から外した外乱を戻すと残留ハザードが出る（`safe_residual_H3`）。これが次の安全要求になる。
+## 証明の失敗からハザードを見つける（説明用のビルド対象）
 
-## Lean Atlas で証明状況を見る
-
-`lean/` は [lean-atlas](https://github.com/kokeshiM0chi/lean-atlas) に依存しており、主要な定理には
-`@[formalMeta ... mainTheorem]` と `@[proof_progress ...]` を付けている。
-`safe_no_H2` は意図的に `sorry` のまま残してある（未証明の安全主張 = ハザード候補）。
+通常の `lake build` には含めていない。詳しくは [docs/08-detect-by-proof-failure.md](docs/08-detect-by-proof-failure.md) と、ビルドが失敗したときの切り分け手順 [docs/10-practice.md](docs/10-practice.md)。
 
 ```sh
 cd lean
-lake build
+lake build DetectWithoutConstraint   # 単体仕様だけ → ビルド成功、ハザードは見つからない
+lake build DetectWithConstraint      # 組み合わせの安全制約を定理にする → ビルド失敗、D の箇所を指す
+lake build DetectCounterexample      # 失敗箇所から組み立てた反例 [D]、[D, D] を確かめる
+lake build DetectFalseAlarm          # 偽の警報の例：主張は正しいが、不変条件がなく証明が止まる
+```
+
+## Lean のファイル構成
+
+| ファイル | 内容 |
+|---|---|
+| `Model.lean` | 状態（現実とバッチの認識）、バッチ A〜D、スケジューラー |
+| `Safety.lean` | 記事の Loss・Hazard と安全制約 `sc1`〜`sc3` |
+| `Uca.lean` | 記事の UCA 表を述語にしたもの |
+| `ModelCheck.lean` | 全実行順の列挙と反例探索 |
+| `Scenarios.lean` | 記事の Loss Scenario A〜D と追加シナリオの実行順 |
+| `Spec.lean` | 各バッチの単体仕様（両設計） |
+| `Hazards.lean` | 対策なし版のハザードと UCA の存在の証明 |
+| `SafeDesign.lean` | 対策版の安全性（証明済み・有界検査・未証明） |
+| `Audit.lean` | ビルド時の検査（ハザード・UCA の検出、注記と実際の証明の照合） |
+| `../Detect/*.lean` | 証明の失敗からハザードを見つける説明用のビルド対象（4つ） |
+
+## `lake build` で分かること
+
+- 長さ5以下の全実行順で見つかったハザードと UCA（警告）
+- 未証明の安全主張（`sorry`、警告）
+- Lean Atlas の `@[proof_progress]` 注記と、実際の `sorry` への依存（依存先の補題まで）が食い違えばエラー
+- 証明済み・`native_decide` 依存・未証明の件数
+
+## Lean Atlas で証明状況を見る
+
+```sh
+cd lean
 lake exe atlas graph-data --output .lake/packages/lean-atlas/web/public/data/graph.json --pretty
 cd .lake/packages/lean-atlas/web
 npx pnpm@10.26.0 install --frozen-lockfile   # pnpm 10 が必要

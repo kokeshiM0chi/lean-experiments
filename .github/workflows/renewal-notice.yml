@@ -1,0 +1,41 @@
+# renewal-notice の CI。
+# 1. Lean をビルドする：定理の検査、ハザードと UCA の検出、証明状況の注記と実態の照合。
+#    注記と実際の証明が食い違えばここで失敗する。
+# 2. Lean が見つけた反例を JSON に書き出し、Go のテストで実装に再生する。
+#    モデルと実装がずれていればここで失敗する。
+name: renewal-notice
+
+on:
+  push:
+    paths:
+      - "renewal-notice/**"
+      - ".github/workflows/renewal-notice.yml"
+  pull_request:
+    paths:
+      - "renewal-notice/**"
+      - ".github/workflows/renewal-notice.yml"
+
+jobs:
+  lean-and-go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lean をビルドする（定理の検査・ハザード検出・証明状況の照合）
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: renewal-notice/lean
+          auto-config: false
+          build: true
+
+      - name: Lean が見つけた反例を書き出す
+        working-directory: renewal-notice/lean
+        run: lake exe explore > out/counterexamples.json
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: renewal-notice/go/go.mod
+
+      - name: Go のテスト（Lean の反例と記事のシナリオを実装で再生する）
+        working-directory: renewal-notice/go
+        run: go test ./... -count=1 -v

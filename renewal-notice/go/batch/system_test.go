@@ -16,7 +16,7 @@ func TestBatchesIndividuallyCorrect(t *testing.T) {
 		t.Fatalf("A: %+v", s.TA)
 	}
 	s.BatchB()
-	if !slices.Equal(s.TB.Rows, []User{1, 2}) {
+	if !slices.Equal(s.TB.Rows, []User{0, 1, 2}) {
 		t.Fatalf("B: %+v", s.TB)
 	}
 	if err := s.BatchC(); err != nil || !slices.Equal(s.TC.Rows, []User{1, 2}) {
@@ -40,10 +40,16 @@ type scenario struct {
 }
 
 var scenarios = []scenario{
-	{"stale join: AとBより先にCが走る", []string{"C", "A", "B", "D"}, []string{"H1", "H3"}, nil},
-	{"TOCTOU: C確定後に利用再開", []string{"A", "B", "C", "use:1", "D"}, []string{"H1"}, nil},
-	{"partial failure + retry", []string{"A", "B", "C", "crashD:1", "D"}, []string{"H2"}, nil},
-	{"silent completion: ログソース故障", []string{"breakSource", "A", "B", "C", "D"}, []string{"H3"}, []string{"H3"}},
+	// 元記事の Loss Scenario A〜D（Lean: Scenarios.lean の scenarioA〜scenarioD）
+	{"記事A: Aの遅延中にCが時刻どおり起動", []string{"B", "C", "A", "D"}, []string{"H1", "H3"}, nil},
+	{"記事B: 部分失敗後に全体を再実行", []string{"A", "B", "C", "crashD:1", "D"}, []string{"H2"}, nil},
+	{"記事C: タイムアウト後に再実行", []string{"A", "B", "C", "crashD:2", "D"}, []string{"H2"}, nil},
+	{"記事D: ログ故障で0件のまま正常終了", []string{"breakSource", "A", "B", "C", "D"}, []string{"H3"}, []string{"H3"}},
+	// 記事にないシナリオ
+	{"追加: Dだけ", []string{"D"}, []string{"H1"}, nil},
+	{"追加: Dを2回", []string{"D", "D"}, []string{"H1", "H2"}, nil},
+	{"追加: DがCより先", []string{"A", "B", "D", "C"}, []string{"H1", "H3"}, nil},
+	{"追加: C確定後に利用再開", []string{"A", "B", "C", "use:1", "D"}, []string{"H1"}, nil},
 }
 
 func replay(t *testing.T, d Design, trace []string) []string {

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>00-lean-basics.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="0-このコードを読むための-lean-の基本">0. このコードを読むための Lean の基本</h1>
+<p>このプロジェクトで使っている Lean の要素だけを説明する。</p>
+<h2 id="定義と定理">定義と定理</h2>
+<p>Lean のファイルには、大きく分けて <strong>定義</strong>（<code>def</code>、<code>structure</code>、<code>inductive</code>）と <strong>定理</strong>（<code>theorem</code>）が書かれている。</p>
+<ul>
+<li><strong>定義</strong>はプログラムである。普通の関数型言語と同じように、値を計算する</li>
+<li><strong>定理</strong>は主張とその証明である。<code>theorem 名前 : 主張 := 証明</code> の形をしている</li>
+</ul>
+<pre class="hljs"><code><div>-- 定義：状態 s を受け取り、Bool を返す関数
+def sc1 (s : State) : Bool := s.sent.all (fun p =&gt; p.2)
+
+-- 定理：「シナリオAを naive で実行すると sc1 が false になる」という主張と、その証明
+theorem scenarioA_H1 : sc1 (run .naive init scenarioA) = false := by decide
+</div></code></pre>
+<p>定理は「すべての入力についてのテスト」と考えるとよい。普通のテストは入力をいくつか試すが、定理は引数（上の例では引数なし、他の定理では <code>(s : State)</code> など）のすべての値について成り立つことを主張する。Lean は証明を機械的に検査し、通らなければビルドがエラーになる。</p>
+<h2 id="型と構文">型と構文</h2>
+<table>
+<thead>
+<tr>
+<th>書き方</th>
+<th>意味</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>structure</code></td>
+<td>フィールドを持つレコード型</td>
+<td><code>structure Table where asOf : Nat; rows : List User</code></td>
+</tr>
+<tr>
+<td><code>inductive</code></td>
+<td>列挙型（各値が引数を持てる）</td>
+<td><code>inductive Action where | runA | crashD (k : Nat)</code></td>
+</tr>
+<tr>
+<td><code>abbrev</code></td>
+<td>型の別名</td>
+<td><code>abbrev User := Nat</code></td>
+</tr>
+<tr>
+<td><code>{ s with f := v }</code></td>
+<td><code>s</code> のフィールド <code>f</code> だけを <code>v</code> に変えた値</td>
+<td><code>{ s with rC := .ok }</code></td>
+</tr>
+<tr>
+<td><code>.ok</code>、<code>.naive</code></td>
+<td>型が分かっているときの省略形</td>
+<td><code>JobResult.ok</code> を <code>.ok</code> と書く</td>
+</tr>
+<tr>
+<td><code>fun x =&gt; ...</code></td>
+<td>無名関数</td>
+<td><code>fun u =&gt; b.rows.contains u</code></td>
+</tr>
+<tr>
+<td><code>(·.1)</code></td>
+<td>「引数の1つ目の成分を取る」無名関数</td>
+<td><code>s.sent.map (·.1)</code></td>
+</tr>
+<tr>
+<td><code>l.filter p</code></td>
+<td>リスト <code>l</code> のうち <code>p</code> が true のもの</td>
+<td></td>
+</tr>
+<tr>
+<td><code>l.contains x</code></td>
+<td><code>l</code> に <code>x</code> が含まれるか（Bool）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>l.all p</code>、<code>l.any p</code></td>
+<td>すべて／どれかが <code>p</code> を満たすか（Bool）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>a ++ b</code></td>
+<td>リストの連結</td>
+<td></td>
+</tr>
+<tr>
+<td><code>&amp;&amp;</code>、<code>||</code>、<code>!</code></td>
+<td>Bool の論理積・論理和・否定</td>
+<td></td>
+</tr>
+<tr>
+<td><code>-- ...</code>、<code>/-- ... -/</code></td>
+<td>コメント、ドキュメントコメント</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="主張に出てくる記号">主張に出てくる記号</h2>
+<table>
+<thead>
+<tr>
+<th>記号</th>
+<th>読み方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>∀ x, P x</code></td>
+<td>すべての x について P x が成り立つ</td>
+</tr>
+<tr>
+<td><code>∃ x, P x</code></td>
+<td>P x を満たす x が存在する</td>
+</tr>
+<tr>
+<td><code>P ∧ Q</code></td>
+<td>P かつ Q</td>
+</tr>
+<tr>
+<td><code>P ∨ Q</code></td>
+<td>P または Q</td>
+</tr>
+<tr>
+<td><code>¬ P</code></td>
+<td>P ではない</td>
+</tr>
+<tr>
+<td><code>P → Q</code></td>
+<td>P ならば Q</td>
+</tr>
+<tr>
+<td><code>P ↔ Q</code></td>
+<td>P と Q は同値</td>
+</tr>
+<tr>
+<td><code>x ∈ l</code></td>
+<td>x はリスト l の要素である</td>
+</tr>
+<tr>
+<td><code>a = b</code>、<code>a ≠ b</code></td>
+<td>等しい、等しくない</td>
+</tr>
+</tbody>
+</table>
+<p><code>Bool</code>（true / false の値）と <code>Prop</code>（主張）は別物である。このプロジェクトでは、安全制約を計算できるように <code>Bool</code> で書き、定理では <code>sc1 s = true</code> や <code>sc1 s = false</code> の形で主張している。</p>
+<h2 id="証明で使っているタクティク">証明で使っているタクティク</h2>
+<p><code>by</code> の後に書くのが証明である。証明は「タクティク」と呼ばれる命令を並べて書く。</p>
+<table>
+<thead>
+<tr>
+<th>タクティク</th>
+<th>何をするか</th>
+<th>このプロジェクトでの使いどころ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>decide</code></td>
+<td>主張を実際に計算して、true になることを Lean のカーネルが確かめる</td>
+<td>具体的な実行順でハザードが起きることの証明</td>
+</tr>
+<tr>
+<td><code>native_decide</code></td>
+<td><code>decide</code> と同じだが、コンパイルしたコードで計算する。速いが、Lean のコンパイラを信頼することになる</td>
+<td>9,331 本の実行順をすべて調べる有界検査</td>
+</tr>
+<tr>
+<td><code>simp [定義名, ...]</code></td>
+<td>定義を展開し、既知の等式で式を簡単にする</td>
+<td>単体仕様の証明</td>
+</tr>
+<tr>
+<td><code>rfl</code></td>
+<td>両辺が計算すると同じになることを示す</td>
+<td>状態が変わらないことの証明</td>
+</tr>
+<tr>
+<td><code>exact 式</code></td>
+<td>ゴールにちょうど当てはまる証明を渡す</td>
+<td>仮定をそのまま使う</td>
+</tr>
+<tr>
+<td><code>intro h</code></td>
+<td>「P ならば Q」や「すべての x」の仮定を取り出す</td>
+<td></td>
+</tr>
+<tr>
+<td><code>cases a with | runA =&gt; ... | ...</code></td>
+<td>値 <code>a</code> の種類ごとに場合分けする</td>
+<td>制御動作の種類ごとの証明</td>
+</tr>
+<tr>
+<td><code>induction t with | nil =&gt; ... | cons a t ih =&gt; ...</code></td>
+<td>リスト <code>t</code> について帰納法を使う。<code>ih</code> は「短いリストでは成り立つ」という仮定</td>
+<td>任意の長さの実行順で成り立つことの証明</td>
+</tr>
+<tr>
+<td><code>split</code></td>
+<td>ゴールの中の <code>if</code> で場合分けする</td>
+<td><code>if</code> を含むバッチの証明</td>
+</tr>
+<tr>
+<td><code>by_cases h : P</code></td>
+<td>P が成り立つ場合と成り立たない場合に分ける</td>
+<td></td>
+</tr>
+<tr>
+<td><code>rcases h with h1 | ⟨x, hx⟩</code></td>
+<td>「または」や「存在する」の仮定を分解する</td>
+<td></td>
+</tr>
+<tr>
+<td><code>unfold 定義名</code></td>
+<td>定義を展開する</td>
+<td></td>
+</tr>
+<tr>
+<td><code>show 式</code></td>
+<td>ゴールを、計算上同じ別の形に書き直す</td>
+<td></td>
+</tr>
+<tr>
+<td><code>left</code>、<code>right</code></td>
+<td>「P または Q」のどちらを示すかを選ぶ</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sorry</code></td>
+<td>証明を省略する。ビルドで警告が出る</td>
+<td>未証明の主張</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sorry-について"><code>sorry</code> について</h2>
+<p><code>sorry</code> は「この証明は省略する」という意味である。</p>
+<pre class="hljs"><code><div>theorem safe_no_H2 (t : List Action) : sc2 (run .safe init t) = true := by
+  sorry
+</div></code></pre>
+<ul>
+<li>Lean はこの定理を証明なしで受け付け、他の定理から使うこともできる</li>
+<li>ビルドすると <code>declaration uses 'sorry'</code> という警告が出る</li>
+<li><code>sorry</code> を使った定理に依存する定理も、実質的には未証明になる</li>
+</ul>
+<p>このプロジェクトでは、まだ証明できていない安全の主張を <code>sorry</code> のまま残し、ハザードの候補として扱っている。</p>
+<h2 id="eval-で値を確かめる"><code>#eval</code> で値を確かめる</h2>
+<p>定義は普通のプログラムなので、<code>#eval</code> で計算結果を見られる。証明を書く前に、主張が本当に成り立ちそうかを確かめるのに便利である。</p>
+<pre class="hljs"><code><div>#eval (run .naive init scenarioA).sent        -- [(0, false), (1, true)]
+#eval sc1 (run .naive init scenarioA)         -- false
+</div></code></pre>
+<h2 id="lean-atlas-の注記">Lean Atlas の注記</h2>
+<p>定理の前の <code>@[...]</code> は、Lean Atlas の注記である。証明の正しさには影響しない。</p>
+<pre class="hljs"><code><div>@[formalMeta &quot;名前&quot; &quot;要約&quot; &quot;参照&quot; mainTheorem,
+  confidence high, proof_progress complete]
+theorem ...
+</div></code></pre>
+<table>
+<thead>
+<tr>
+<th>注記</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>formalMeta &quot;名前&quot; &quot;要約&quot; &quot;参照&quot;</code></td>
+<td>ビューアに表示する名前と説明。参照には STPA 上の役割を書いた</td>
+</tr>
+<tr>
+<td><code>mainTheorem</code></td>
+<td>主定理。ビューアのプルダウンに出る</td>
+</tr>
+<tr>
+<td><code>confidence high</code> / <code>medium</code></td>
+<td>主張が意図どおりの意味になっているかの確信度</td>
+</tr>
+<tr>
+<td><code>proof_progress complete</code> / <code>stub</code></td>
+<td>証明の進み具合。<code>complete</code> なのに <code>sorry</code> があるとエラーになる</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

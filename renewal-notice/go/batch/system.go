@@ -84,11 +84,12 @@ type System struct {
 
 // NewSystem は Lean の init と同じ初期状態を作る。
 // 前回サイクル（day 0）の抽出結果が残っている状態から、今日（day 1）のサイクルを始める。
+// 会員0は翌月更新を迎えるが、最近利用を再開したので通知対象外。会員1・2が通知対象。
 func NewSystem(d Design) *System {
 	return &System{
 		Design: d,
 		Today:  1,
-		World:  World{Users: []User{0, 1, 2}, Inactive: []User{1, 2}, Renewing: []User{1, 2}, LogOK: true},
+		World:  World{Users: []User{0, 1, 2}, Inactive: []User{1, 2}, Renewing: []User{0, 1, 2}, LogOK: true},
 		TA:     Table{AsOf: 0, Rows: []User{0, 1}},
 		TB:     Table{AsOf: 0, Rows: []User{0}},
 		TC:     Table{AsOf: 0, Rows: []User{0}},

@@ -1,4 +1,4 @@
-import RenewalNotice.Safety
+import RenewalNotice.Uca
 /-!
 # 有界モデル検査: 「証明できない」を反例の探索に置き換える
 
@@ -28,12 +28,39 @@ def tracesUpTo (al : List Action) (n : Nat) : List (List Action) :=
 def counterexample (d : Design) (h : Hazard) (al : List Action) (n : Nat) : Option (List Action) :=
   (tracesUpTo al n).find? (fun t => !h.sc (run d init t))
 
-/-- トレース中で、安全制約を初めて破った制御動作とその直前の状態（コンテキスト）を返す。
-    STPA の UCA（どんなコンテキストで、どの制御動作が危険だったか）にあたる。 -/
-def firstUCA (d : Design) (h : Hazard) : State → List Action → Option (State × Action)
+/-- 設計 d で UCA u が起きる最短の実行順。 -/
+def ucaExample (d : Design) (u : Uca) (al : List Action) (n : Nat) : Option (List Action) :=
+  (tracesUpTo al n).find? (fun t => ucaInTrace d u init t)
+
+/-- 実行順の中で、安全制約を初めて破った制御動作と、その直前の状態を返す。
+    「破れた瞬間の操作」であって、根本原因とは限らない。
+    記事の UCA の判定は `Uca.lean` の `Uca.occurs` で行う。 -/
+def firstViolation (d : Design) (h : Hazard) : State → List Action → Option (State × Action)
   | _, []     => none
   | s, a :: t =>
     let s' := step d s a
-    if h.sc s && !h.sc s' then some (s, a) else firstUCA d h s' t
+    if h.sc s && !h.sc s' then some (s, a) else firstViolation d h s' t
+
+/-! ## 表示用 -/
+
+def Design.name : Design → String
+  | .naive => "naive"
+  | .safe  => "safe"
+
+def Action.str : Action → String
+  | .runA        => "A"
+  | .runB        => "B"
+  | .runC        => "C"
+  | .runD        => "D"
+  | .crashD k    => s!"crashD:{k}"
+  | .use u       => s!"use:{u}"
+  | .breakSource => "breakSource"
+
+/-- JSON の配列としても読める形で、実行順を文字列にする。 -/
+def traceStr (t : List Action) : String :=
+  "[" ++ ", ".intercalate (t.map (fun a => "\"" ++ a.str ++ "\"")) ++ "]"
+
+/-- 探索の上限（実行順の長さ）。 -/
+def searchBound : Nat := 5
 
 end RenewalNotice

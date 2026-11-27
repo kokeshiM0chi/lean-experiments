@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>03-spec.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="3-各バッチは単体では正しいspeclean">3. 各バッチは単体では正しい（<code>Spec.lean</code>）</h1>
+<p>ソース：<a href="../lean/RenewalNotice/Spec.lean"><code>lean/RenewalNotice/Spec.lean</code></a></p>
+<h2 id="この章で言いたいこと">この章で言いたいこと</h2>
+<p><strong>どのバッチも、単体で見れば仕様どおりに動く。</strong> これを、すべての入力（すべての状態 <code>s</code>）について証明する。</p>
+<p>STAMP の主張は「部品が正常でも事故は起きる」である。それを示すには、まず「部品が正常である」ことをはっきりさせておく必要がある。この章の定理がその「部品は正常」にあたり、<a href="04-hazards.md">4章</a>の「それでも事故は起きる」と対になる。</p>
+<p>単体テストは、いくつかの入力で確かめるだけである。ここでは同じことを、すべての入力について保証する。</p>
+<table>
+<thead>
+<tr>
+<th>バッチ</th>
+<th>naive の単体仕様</th>
+<th>safe の単体仕様</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><code>batchA_spec</code>（両設計共通）</td>
+<td>同左</td>
+</tr>
+<tr>
+<td>B</td>
+<td><code>batchB_spec</code>（両設計共通）</td>
+<td>同左</td>
+</tr>
+<tr>
+<td>C</td>
+<td><code>batchC_naive_spec</code></td>
+<td><code>batchC_safe_spec_fresh</code>、<code>batchC_safe_spec_stale</code></td>
+</tr>
+<tr>
+<td>D</td>
+<td><code>batchD_naive_spec</code></td>
+<td><code>batchD_safe_spec_fresh</code>、<code>batchD_safe_spec_stale</code>、<code>pending_not_sent</code>、<code>batchDSafe_sentOk</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="ab抽出は正しい">A・B：抽出は正しい</h2>
+<h3 id="ここで言いたいこと">ここで言いたいこと</h3>
+<p>A は「利用ログに載っている会員を、漏れも余分もなく抽出し、今日の日付で正常終了する」。B も同様に契約情報について成り立つ。</p>
+<pre class="hljs"><code><div>@[formalMeta &quot;A単体仕様&quot; &quot;Aは利用ログどおりに非アクティブ者を抽出し、正常終了する（両設計共通）&quot; &quot;STPA: コンポーネントの正しさ&quot;,
+  confidence high, proof_progress complete]
+theorem batchA_spec (s : State) (u : User) :
+    (u ∈ (batchA s).tA.rows ↔ u ∈ s.world.users ∧ s.world.inactiveLog.contains u = true) ∧
+    (batchA s).tA.asOf = s.today ∧ (batchA s).rA = .ok := by
+  simp [batchA, List.mem_filter]
+</div></code></pre>
+<h3 id="読み方">読み方</h3>
+<p>どんな状態 <code>s</code> と会員 <code>u</code> についても、次の3つが成り立つ。</p>
+<ol>
+<li>A を実行した後の tA に <code>u</code> が入っている ⟺ <code>u</code> は会員で、かつ利用ログに載っている（漏れも余分もない）</li>
+<li>tA の基準日は今日である</li>
+<li>A の結果は正常終了である</li>
+</ol>
+<p><code>batchB_spec</code> は、利用ログを契約情報（<code>renewing</code>）に置き換えた同じ形の定理である。</p>
+<h3 id="証明の中身">証明の中身</h3>
+<p><code>simp [batchA, List.mem_filter]</code> の1行で終わる。</p>
+<ul>
+<li><code>batchA</code> を指定したので、<code>batchA s</code> が定義どおりに展開される。<code>(batchA s).tA.asOf</code> は <code>s.today</code> に、<code>(batchA s).rA</code> は <code>.ok</code> になる</li>
+<li><code>List.mem_filter</code> は「<code>x ∈ l.filter p</code> ⟺ <code>x ∈ l ∧ p x = true</code>」という既存の定理で、1つ目の主張の左辺を右辺と同じ形に書き換える</li>
+<li>3つとも「左辺と右辺が同じ」になるので、<code>simp</code> が自動で閉じる</li>
+</ul>
+<h3 id="注意">注意</h3>
+<p>利用ログが壊れていると（<code>logOk = false</code>）、<code>inactiveLog</code> は空になり、A は0件の表を書いて正常終了する。この定理はそれも含めて「A は読んだとおりに書く」と言っている。A 自身は正しく、問題は入力の側にある。これが<a href="04-hazards.md">4章</a>のシナリオDにつながる。</p>
+<h2 id="c積集合は正しい">C：積集合は正しい</h2>
+<h3 id="naive">naive</h3>
+<pre class="hljs"><code><div>@[formalMeta &quot;C単体仕様（naive）&quot; &quot;CはtAとtBの積集合を取り、正常終了する&quot; &quot;STPA: コンポーネントの正しさ&quot;,
+  confidence high, proof_progress complete]
+theorem batchC_naive_spec (s : State) (u : User) :
+    (u ∈ (batchC .naive s).tC.rows ↔ u ∈ s.tA.rows ∧ s.tB.rows.contains u = true) ∧
+    (batchC .naive s).rC = .ok := by
+  simp [batchC, intersect, List.mem_filter]
+</div></code></pre>
+<p>読み方：naive の C を実行すると、tC に入るのは「tA にも tB にもいる会員」だけで、C は正常終了する。</p>
+<p>証明は A と同じく <code>simp</code> で、<code>batchC</code>（naive の場合）と <code>intersect</code> を展開し、<code>List.mem_filter</code> で書き換えている。</p>
+<p>ここで言えるのは「C は渡された tA と tB の積集合を正しく取る」ことである。tA が古いかどうかには触れていない。それが単体仕様の範囲である。</p>
+<h3 id="safe入力が新しいとき古いとき">safe：入力が新しいとき・古いとき</h3>
+<pre class="hljs"><code><div>@[formalMeta &quot;C単体仕様（safe・入力が新しい）&quot; &quot;tAとtBの基準日が今日なら、積集合を取り正常終了する&quot; &quot;STPA: コンポーネントの正しさ&quot;,
+  confidence high, proof_progress complete]
+theorem batchC_safe_spec_fresh (s : State) (h : s.tA.asOf = s.today ∧ s.tB.asOf = s.today) :
+    (batchC .safe s).tC = intersect s.tA s.tB s.today ∧ (batchC .safe s).rC = .ok := by
+  simp [batchC, h]
+
+@[formalMeta &quot;C単体仕様（safe・入力が古い）&quot; &quot;tAかtBの基準日が今日でなければ、tCを変えずに失敗で終わる&quot; &quot;STPA: コンポーネントの正しさ&quot;,
+  confidence high, proof_progress complete]
+theorem batchC_safe_spec_stale (s : State) (h : ¬ (s.tA.asOf = s.today ∧ s.tB.asOf = s.today)) :
+    (batchC .safe s).tC = s.tC ∧ (batchC .safe s).rC = .failed := by
+  simp [batchC, h]
+</div></code></pre>
+<p>読み方：</p>
+<ul>
+<li><code>_fresh</code>：tA と tB の基準日がどちらも今日なら（仮定 <code>h</code>）、safe の C は積集合を取って正常終了する</li>
+<li><code>_stale</code>：そうでなければ（仮定 <code>h</code> が否定）、tC を変えずに失敗で終わる</li>
+</ul>
+<p>証明の中身：<code>simp [batchC, h]</code> は、safe の C の <code>if</code> の条件を仮定 <code>h</code> で true（または false）に書き換え、<code>if</code> の片方の枝だけを残す。残った式は両辺が同じになるので閉じる。</p>
+<p>この2つで、safe の C の動作をすべての場合について言い切っている。</p>
+<h2 id="d送信は正しい">D：送信は正しい</h2>
+<h3 id="naive-1">naive</h3>
+<pre class="hljs"><code><div>@[formalMeta &quot;D単体仕様（naive）&quot; &quot;DはtCの全員に送り、正常終了する&quot; &quot;STPA: コンポーネントの正しさ&quot;,
+  confidence high, proof_progress complete]
+theorem batchD_naive_spec (s : State) :
+    sentUsers (batchD .naive none s) = sentUsers s ++ s.tC.rows ∧
+    (batchD .naive none s).rD = .ok := by
+  simp [batchD, batchDNaive, sentUsers, record, limit, doneResult, List.map_append, List.map_map,
+    Function.comp_def]
+</div></code></pre>
+<p>読み方：naive の D を（途中で失敗せずに）実行すると、送信済みの一覧の後ろに tC の全員が追加され、D は正常終了する。</p>
+<p>証明の中身：</p>
+<ul>
+<li><code>batchD</code>、<code>batchDNaive</code>、<code>limit</code>、<code>doneResult</code> を展開すると、<code>sent</code> は <code>s.sent ++ record s s.tC.rows</code> になる</li>
+<li><code>sentUsers</code> は送信記録から宛先だけを取り出す（<code>map (·.1)</code>）。<code>List.map_append</code> で連結の <code>map</code> を分け、<code>List.map_map</code> と <code>Function.comp_def</code> で「<code>record</code> で組にしてから宛先を取り出す」が「元のまま」になることを示す</li>
+<li>両辺が <code>sentUsers s ++ s.tC.rows</code> になって閉じる</li>
+</ul>
+<h3 id="safe入力が新しいとき古いとき-1">safe：入力が新しいとき・古いとき</h3>
+<pre class="hljs"><code><div>@[formalMeta &quot;D単体仕様（safe・入力が新しい）&quot; &quot;tCの基準日が今日なら、未送信かつ今も対象の人全員に送り、正常終了する&quot; &quot;STPA: コンポーネントの正しさ&quot;,
+  confidence high, proof_progress complete]
+theorem batchD_safe_spec_fresh (s : State) (h : s.tC.asOf = s.today) :
+    sentUsers (batchD .safe none s) = sentUsers s ++ pending s ∧
+    (batchD .safe none s).rD = .ok := by
+  simp [batchD, batchDSafe, h, sentUsers, record, limit, doneResult, List.map_append, List.map_map,
+    Function.comp_def]
+
+@[formalMeta &quot;D単体仕様（safe・入力が古い）&quot; &quot;tCの基準日が今日でなければ、何も送らずに失敗で終わる&quot; &quot;STPA: コンポーネントの正しさ&quot;,
+  confidence high, proof_progress complete]
+theorem batchD_safe_spec_stale (s : State) (k : Option Nat) (h : s.tC.asOf ≠ s.today) :
+    (batchD .safe k s).sent = s.sent ∧ (batchD .safe k s).rD = .failed := by
+  simp [batchD, batchDSafe, h]
+</div></code></pre>
+<p>読み方：</p>
+<ul>
+<li><code>_fresh</code>：tC が今日のものなら、safe の D は <code>pending s</code>（未送信かつ今も対象の人）全員に送り、正常終了する</li>
+<li><code>_stale</code>：tC が今日のものでなければ、途中失敗の有無（<code>k</code>）によらず、何も送らずに失敗で終わる</li>
+</ul>
+<p>証明は C の safe 版と同じ考え方で、仮定 <code>h</code> で <code>if</code> を片方に決めてから <code>simp</code> で整理している。</p>
+<h3 id="safe送信済みの人には送らない">safe：送信済みの人には送らない</h3>
+<h4 id="ここで言いたいこと-1">ここで言いたいこと</h4>
+<p>safe の D が送る相手（<code>pending s</code>）には、すでに配信基盤が受理した人は含まれない。これが「同一ユーザーへの通知指示を一意に管理する」の、D 単体についての保証である。</p>
+<pre class="hljs"><code><div>@[formalMeta &quot;D単体仕様（safe・送信済みは除く）&quot; &quot;safeのDが送る相手には、送信済みの人が含まれない&quot; &quot;STPA: フィードバックの利用&quot;,
+  confidence high, proof_progress complete]
+theorem pending_not_sent (s : State) (u : User) (hu : u ∈ pending s) :
+    (sentUsers s).contains u = false := by
+  simp only [pending, List.mem_filter, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true] at hu
+  exact hu.2.1
+</div></code></pre>
+<p>読み方：<code>u</code> が <code>pending s</code> に入っているなら（仮定 <code>hu</code>）、<code>u</code> は送信済みの一覧に含まれない。</p>
+<p>証明の中身：</p>
+<ol>
+<li><code>simp only [...] at hu</code> で、仮定 <code>hu</code> を書き換える。<code>pending</code> を展開し、<code>List.mem_filter</code> で「<code>u ∈ tC.rows</code> かつ（未送信 かつ 対象者）」に分解する。<code>Bool.and_eq_true</code> などで Bool の式を「〜かつ〜」の形にそろえる</li>
+<li>書き換えた後の <code>hu</code> は「<code>u ∈ s.tC.rows</code> ∧ <code>(sentUsers s).contains u = false</code> ∧ <code>s.world.isTarget u = true</code>」になっている</li>
+<li><code>exact hu.2.1</code> で、その2つ目（未送信）を取り出してゴールに渡す</li>
+</ol>
+<h3 id="safe対象者にだけ送る">safe：対象者にだけ送る</h3>
+<h4 id="ここで言いたいこと-2">ここで言いたいこと</h4>
+<p>safe の D を実行しても、「送信記録はすべて、送った時点で本当の対象者宛て」という性質は壊れない。これは安全制約 SC1 を D 単体について示したもので、<a href="05-safe-design.md">5章</a>の帰納法の部品になる。</p>
+<pre class="hljs"><code><div>@[formalMeta &quot;D単体仕様（safe・対象者だけ）&quot; &quot;safeのDは、送る時点で本当に対象の人にだけ送る&quot; &quot;STPA: Safety Constraint SC1 の局所版&quot;,
+  confidence high, proof_progress complete]
+theorem batchDSafe_sentOk (k : Option Nat) (s : State) (h : SentOk s) :
+    SentOk (batchDSafe k s) := by
+  unfold batchDSafe
+  split
+  · intro p hp
+    simp only [List.mem_append, record, List.mem_map] at hp
+    rcases hp with hp | ⟨u, hu, rfl⟩
+    · exact h p hp
+    · have hu' : u ∈ pending s := by
+        cases k with
+        | none   =&gt; exact hu
+        | some n =&gt; exact List.mem_of_mem_take hu
+      simp only [pending, List.mem_filter, Bool.and_eq_true] at hu'
+      exact hu'.2.2
+  · exact h
+</div></code></pre>
+<p><code>SentOk</code> は <a href="../lean/RenewalNotice/Scenarios.lean"><code>Scenarios.lean</code></a> で定義した、SC1 を命題にしたものである。</p>
+<pre class="hljs"><code><div>def SentOk (s : State) : Prop := ∀ p ∈ s.sent, p.2 = true
+</div></code></pre>
+<p>読み方：実行前の状態で SentOk が成り立っていれば（仮定 <code>h</code>）、safe の D を実行した後も SentOk が成り立つ。</p>
+<p>証明の中身：</p>
+<ol>
+<li><code>unfold batchDSafe</code> で D の定義を展開する。中に <code>if s.tC.asOf = s.today then ... else ...</code> が現れる</li>
+<li><code>split</code> で <code>if</code> の2つの場合に分ける</li>
+<li>tC が今日のもので、実際に送る場合：
+<ul>
+<li><code>intro p hp</code> で「送信記録の任意の要素 <code>p</code>」を取り出す。<code>hp</code> は「<code>p</code> は送信記録に入っている」</li>
+<li><code>simp only [List.mem_append, record, List.mem_map] at hp</code> で、<code>hp</code> を「<code>p</code> は元の記録に入っている」または「<code>p</code> は今回送った <code>(u, isTarget u)</code> の形」に分解する</li>
+<li><code>rcases</code> で2つの場合に分ける
+<ul>
+<li>元の記録に入っている場合：仮定 <code>h</code> から、<code>p.2 = true</code> がすぐに分かる（<code>exact h p hp</code>）</li>
+<li>今回送った場合：<code>p = (u, s.world.isTarget u)</code> なので、示すべきことは <code>s.world.isTarget u = true</code>。<code>u</code> は <code>limit k (pending s)</code> に入っているので、<code>limit</code> の定義で場合分けして <code>u ∈ pending s</code> を得る（<code>take</code> で切っても要素は元のリストに入っている：<code>List.mem_of_mem_take</code>）。最後に <code>pending</code> を展開すると、3つ目の条件がちょうど <code>isTarget u = true</code> になる（<code>exact hu'.2.2</code>）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>tC が古く、何も送らない場合：送信記録は変わらないので、仮定 <code>h</code> がそのまま使える（<code>exact h</code>）</li>
+</ol>
+<p>ポイントは、safe の D が送る直前に <code>isTarget</code> で対象者かを確かめていることが、証明の3つ目の手順に効いていることである。</p>
+
+</body>
+</html>
